@@ -36,8 +36,8 @@ client.on('message', async (message) => {
 		return commandHelper.embed(message, `Error: Cannot find database instance of ${message.content}`).then(m => m.delete({ timeout: 1000 }));
 	}
 
-	const getPrefix = db.prepare('SELECT value FROM settings WHERE guild = ? AND name = ?').get(message.guild.id, 'prefix');
-	const prefix = getPrefix.value ? getPrefix.value : '!';
+	const getPrefix = await db.prepare('SELECT value FROM settings WHERE guild = ? AND name = ?').get(message.guild.id, 'prefix');
+	const prefix = (getPrefix && getPrefix.value) ? getPrefix.value : '!';
 
 	if(!message.content.startsWith(prefix)) return;
 
